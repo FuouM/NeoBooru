@@ -1,0 +1,7 @@
+Character:
+yuno_(hidamari_sketch)
+
+Generals:
+torii
+rating:safe
+short_hair

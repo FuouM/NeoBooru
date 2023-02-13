@@ -1,0 +1,14 @@
+Character:
+yuno_(hidamari_sketch)
+
+Generals:
+1girl
+rating:safe
+x_hair_ornament
+solo
+hair_ornament
+food
+brown_hair
+vegetable
+potted_plant
+brown_eyes
