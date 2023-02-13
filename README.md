@@ -1,5 +1,5 @@
 # NeoBooru
-## Tagging massive amount of anime images automatically using DeepDanbooru based on https://github.com/KichangKim/DeepDanbooru
+## Tagging massive amount of anime images automatically (and locally) using DeepDanbooru https://github.com/KichangKim/DeepDanbooru
 
 <p align="center">
   <img src="result.png"/>
