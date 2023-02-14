@@ -18,7 +18,7 @@ def parse_args():
         dest="gpu_id", help="GPU device id to use (Default=0)", default=0, type=int)
     
     parser.add_argument("--cpu",
-        dest="cpu", help="CPU only mode (Default=False)", action="store_true")
+        dest="cpu", help="CPU only mode", action="store_true")
     
     parser.add_argument("--model",
         dest="model_path", help="Path to model file", type=str, required=True)
@@ -38,6 +38,12 @@ def parse_args():
     parser.add_argument("--limit",
         dest="tag_limit", help="Limit for amount of tags. (Default=5). Doesn't affect character tags if --chartag is provided.",
         default=5, type=int)
+    
+    parser.add_argument("--inplace",
+        dest="inplace", help="File renaming mode (No txt). Format: char_names__B__C", action="store_true")
+    
+    parser.add_argument("--verbose",
+        dest="verbose", help="Print the tags for each successful image", action="store_true")
     
     args = parser.parse_args()
 
@@ -73,6 +79,9 @@ def main():
     tags_path = args.tags_path
     char_path = args.char_path
     tag_limit = args.tag_limit
+    is_inplace = args.inplace
+    is_verbose = args.verbose
+    
     devices = tf.config.list_physical_devices('GPU')
     if not args.cpu and len(devices) > 0:
         print('GPU is available')
@@ -143,11 +152,25 @@ def main():
         sorted_list = sorted(tag_score, key=lambda x: x[1], reverse=True)
         tag_list = [x[0] for x in sorted_list]
         file_name = os.path.splitext(image_path)[0]
+            
         if char_mode:
             char, gen = separate_tags(tag_list, character_tags, tag_limit)
-            utils.save_txt_file_char_mode(f"{file_name}.txt", char, gen)
         else:
-            utils.save_txt_file(f"{file_name}.txt", tag_list)
+            char, gen = (tag_list,), None
+        if is_verbose:
+            print(char)
+            print()
+            print(gen)
+        if is_inplace:
+            print(f"File renamed to {utils.rename_file(image_path, char, gen)}")
+        else:
+            if char_mode:
+                utils.save_txt_file_char_mode(f"{file_name}.txt", char, gen)
+            else:
+                utils.save_txt_file(f"{file_name}.txt", char)
+            print("txt_file saved")
+
+
         print(f"{time.time() - start_time:.3f}s") # Print elapsed time
 
     print(f"Everything took {time.time() - total_start_time:.3f}s")

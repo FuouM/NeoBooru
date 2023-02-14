@@ -2,6 +2,7 @@ Character:
 hiiragi_kagami
 izumi_konata
 hiiragi_tsukasa
+
 Generals:
 multiple_girls
 rating:safe
