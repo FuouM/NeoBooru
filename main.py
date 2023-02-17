@@ -146,32 +146,36 @@ def main():
 
     total_start_time = time.time()
     for image_path in target:
-        start_time = time.time()
-        print(f"Tags of {image_path}:") # Print image path
-        tag_score = [(tag, score) for tag, score in evaluate_image(image_path, model, tags, threshold)]
-        sorted_list = sorted(tag_score, key=lambda x: x[1], reverse=True)
-        tag_list = [x[0] for x in sorted_list]
-        file_name = os.path.splitext(image_path)[0]
-            
-        if char_mode:
-            char, gen = separate_tags(tag_list, character_tags, tag_limit)
-        else:
-            char, gen = (tag_list,), None
-        if is_verbose:
-            print(char)
-            print()
-            print(gen)
-        if is_inplace:
-            print(f"File renamed to {utils.rename_file(image_path, char, gen)}")
-        else:
+        try:
+            start_time = time.time()
+            print(f"Tags of {image_path}:") # Print image path
+            tag_score = [(tag, score) for tag, score in evaluate_image(image_path, model, tags, threshold)]
+            sorted_list = sorted(tag_score, key=lambda x: x[1], reverse=True)
+            tag_list = [x[0] for x in sorted_list]
+            file_name = os.path.splitext(image_path)[0]
+                
             if char_mode:
-                utils.save_txt_file_char_mode(f"{file_name}.txt", char, gen)
+                char, gen = separate_tags(tag_list, character_tags, tag_limit)
             else:
-                utils.save_txt_file(f"{file_name}.txt", char)
-            print("txt_file saved")
+                char, gen = (tag_list,), None
+            if is_verbose:
+                print(char)
+                print()
+                print(gen)
+            if is_inplace:
+                print(f"File renamed to {utils.rename_file(image_path, char, gen)}")
+            else:
+                if char_mode:
+                    utils.save_txt_file_char_mode(f"{file_name}.txt", char, gen)
+                else:
+                    utils.save_txt_file(f"{file_name}.txt", char)
+                print("txt_file saved")
 
 
-        print(f"{time.time() - start_time:.3f}s") # Print elapsed time
+            print(f"{time.time() - start_time:.3f}s") # Print elapsed time
+        except:
+            print(f"Error: {image_path}")
+            pass
 
     print(f"Everything took {time.time() - total_start_time:.3f}s")
     
